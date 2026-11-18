@@ -1,0 +1,109 @@
+{
+  "info": {
+    "_postman_id": "5d7d7deb-33e9-4027-8f81-eac20b90f207",
+    "name": "FutureSkill Class Project - JSONPlaceholder API",
+    "description": "Class Project: ทดสอบ API อัตโนมัติด้วย Postman และ Newman\nTC1: GET /posts ตรวจ Status 200 OK และ Type\nTC2: POST /posts/1 ตรวจ Status 404 Not Found และ Response time < 80ms",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "TC1 - GET posts (200 OK + Type)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"TC1-1 Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.status).to.eql(\"OK\");",
+              "});",
+              "",
+              "pm.test(\"TC1-2 Content-Type is application/json\", function () {",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+              "});",
+              "",
+              "pm.test(\"TC1-3 Response body type is an array of post objects\", function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data).to.be.an(\"array\").that.is.not.empty;",
+              "    pm.expect(data[0]).to.be.an(\"object\");",
+              "    pm.expect(data[0].userId).to.be.a(\"number\");",
+              "    pm.expect(data[0].id).to.be.a(\"number\");",
+              "    pm.expect(data[0].title).to.be.a(\"string\");",
+              "    pm.expect(data[0].body).to.be.a(\"string\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "TC2 - POST posts/1 (404 + Response time < 80ms)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"TC2-1 Status code is 404 Not Found\", function () {",
+              "    pm.response.to.have.status(404);",
+              "    pm.expect(pm.response.status).to.eql(\"Not Found\");",
+              "});",
+              "",
+              "pm.test(\"TC2-2 Response time is less than 80ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(80);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"foo\",\n  \"body\": \"bar\",\n  \"userId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://jsonplaceholder.typicode.com"
+    }
+  ]
+}
